@@ -1,36 +1,31 @@
-SRC =	src/ fly_in.py
+FLAGS = --warn-return-any --warn-unused-ignores --ignore-missing-imports --disallow-untyped-defs --check-untyped-defs --follow-imports=skip
 
-FLAGS = --warn-return-any --warn-unused-ignores --ignore-missing-imports --disallow-untyped-defs --check-untyped-defs
-
-ARG ?=
+SRC = ./src/
 
 install:
 	@uv venv --python 3.10
-	@uv add --dev flake8 mypy
-	@uv add pydantic pygame
+	@uv add flake8 mypy transformers torch numpy accelerate huggingface-hub
 	@uv sync
 	@clear
 
 run:
 	@clear
-	@.venv/bin/python3 fly_in.py $(ARG)
+	@uv run -m src
 
 debug:
 	@clear
-	@.venv/bin/python3 -m pdb fly_in.py $(ARG)
+	@uv run -m pdb -m src
 
 clean:
 	@clear
-	find . -type d -name "__pycache__" -exec rm -rf {} +
-	find . -type d -name ".mypy_cache" -exec rm -rf {} +
-	find . -type d -name ".ruff_cache" -exec rm -rf {} +
-	find . -name "*.pyc" -delete
+	@find . -type d -name "__pycache__" -exec rm -rf {} +
+	@find . -type d -name ".mypy_cache" -exec rm -rf {} +
+	@find . -type d -name ".ruff_cache" -exec rm -rf {} +
+	@find . -name "*.pyc" -delete
 
 fclean: clean
 	@clear
 	@rm -rf .venv
-	@rm -f uv.lock
-	@rm -f maze.txt
 
 lint:
 	@clear
