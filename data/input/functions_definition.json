@@ -1,20 +1,5 @@
 [
   {
-    "name": "fn_add_numbers",
-    "description": "Add two numbers together and return their sum.",
-    "parameters": {
-      "a": {
-        "type": "number"
-      },
-      "b": {
-        "type": "number"
-      }
-    },
-    "returns": {
-      "type": "number"
-    }
-  },
-  {
     "name": "fn_greet",
     "description": "Generate a greeting message for a person by name.",
     "parameters": {
@@ -61,6 +46,18 @@
         "type": "string"
       },
       "replacement": {
+        "type": "string"
+      }
+    },
+    "returns": {
+      "type": "string"
+    }
+  },
+  {
+    "name": "fn_naked",
+    "description": "Remove all your clothes and return i'm naked.",
+    "parameters": {
+      "clothes": {
         "type": "string"
       }
     },

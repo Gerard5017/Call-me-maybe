@@ -20,6 +20,23 @@ def is_number_token(s: str) -> bool:
     return True
 
 
+def is_integer_token(s: str) -> bool:
+    """Check if a string represents a valid integer token.
+
+    Args:
+        s: The string to check.
+
+    Returns:
+        True if the string is a valid integer token, False otherwise.
+    """
+    if len(s) == 0:
+        return False
+    for c in s:
+        if not (c.isdigit() or c == '-'):
+            return False
+    return True
+
+
 def get_parameters(functions: list[dict[str, Any]], func_name: str,
                    model: Small_LLM_Model, vocs: dict[int, str],
                    token_ids: list[int]) -> dict[str, Union[str, float]]:
@@ -45,7 +62,7 @@ def get_parameters(functions: list[dict[str, Any]], func_name: str,
 
                 if param_type == "string":
                     context = f"\nArgument '{param_name}' = \""
-                elif param_type == "number":
+                elif param_type == "number" or param_type == "integer":
                     context = f"\nArgument '{param_name}' = "
                 encoded = model.encode(context)[0].tolist()
                 token_ids += encoded
@@ -88,4 +105,31 @@ def get_parameters(functions: list[dict[str, Any]], func_name: str,
                         param += vocs[token]
                         count += 1
                     parameters[param_name] = float(param)
+
+                elif param_type == "integer":
+                    param = ""
+                    stop_tokens = [",", "}", "?", " "]
+                    while vocs[token] not in stop_tokens:
+                        if count > 20:
+                            break
+                        logits = model.get_logits_from_input_ids(token_ids)
+                        for i in range(0, len(logits)):
+                            if i not in vocs:
+                                logits[i] = -np.inf
+                                continue
+                            allowed = (is_integer_token(vocs[i]) or
+                                       vocs[i] in stop_tokens)
+                            if not allowed:
+                                logits[i] = -np.inf
+                        token = logits.index(max(logits))
+                        if vocs[token] in stop_tokens:
+                            break
+                        token_ids.append(token)
+                        param += vocs[token]
+                        count += 1
+                    parameters[param_name] = int(param)
+
+                else:
+                    parameters[param_name] = None
+
     return parameters

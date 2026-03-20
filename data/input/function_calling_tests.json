@@ -1,6 +1,9 @@
 [
   {
-    "prompt": "What is the sum of 2 and 3?"
+    "prompt": "Give me a the sum of -5541206147798962014 and 02541203367?"
+  },
+  {
+    "prompt": "Give me a the sum of the division of -5541206147798962014 and 0?"
   },
   {
     "prompt": "What is the sum of 265 and 345?"
@@ -33,6 +36,6 @@
     "prompt": "Substitute the word 'cat' with 'dog' in 'The cat sat on the mat with another cat'"
   },
   {
-    "prompt": "Say yes master!"
+    "prompt": "Get naked ! you have pants on you !"
   }
 ]
